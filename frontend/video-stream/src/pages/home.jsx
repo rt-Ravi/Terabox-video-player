@@ -21,7 +21,7 @@ function App() {
         encodedUrl = `https://www.terabox.app/sharing/link?surl=${link_id}`;
       }
 
-      const response = await fetch(`http://localhost:3000/test-extract`, {
+      const response = await fetch(`http://35.154.233.99:3000/test-extract`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -32,7 +32,7 @@ function App() {
       const data = await response.json();
       console.log(data);
       setTeraboxUrl(data.directUrl);
-      setVideoSrc(`http://localhost:3000/google-video?url=${encodedUrl}`);
+      setVideoSrc(`http://35.154.233.99:3000/google-video?url=${encodedUrl}`);
 
       // reload video when source changes
       setTimeout(() => {
