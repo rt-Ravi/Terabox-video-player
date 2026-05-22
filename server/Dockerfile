@@ -28,5 +28,6 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 
-EXPOSE 5000
+# Fixed: was 5000, server actually runs on 3000
+EXPOSE 3000
 CMD ["node", "index.js"]

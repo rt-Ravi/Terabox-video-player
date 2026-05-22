@@ -5,45 +5,43 @@ function App() {
   const [inputUrl, setInputUrl] = useState("");
   const [videoSrc, setVideoSrc] = useState("");
   const [teraboxUrl, setTeraboxUrl] = useState("");
-  const [isLoading, setIsLoading] = useState(false); // Add loading state
+  const [isLoading, setIsLoading] = useState(false);
+  const BACKEND = import.meta.env.VITE_BACKEND_URL;
 
   const playVideo = async () => {
     if (!inputUrl.trim()) return;
 
-    setIsLoading(true); // Set loading to true when starting fetch
+    setIsLoading(true);
 
     try {
-      // Encode URL before sending to backend
       let encodedUrl = encodeURIComponent(inputUrl.trim());
 
-      if(encodedUrl.includes('1024terabox')){
+      if (encodedUrl.includes('1024terabox')) {
         const link_id = encodedUrl.replace('https%3A%2F%2F1024terabox.com%2Fs%2F1', '');
         encodedUrl = `https://www.terabox.app/sharing/link?surl=${link_id}`;
       }
 
-      const response = await fetch(`http://35.154.233.99:3000/test-extract`, {
+      const response = await fetch(`${BACKEND}/test-extract`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ url: encodedUrl }),
       });
-      
+
       const data = await response.json();
       console.log(data);
       setTeraboxUrl(data.directUrl);
-      setVideoSrc(`http://35.154.233.99:3000/google-video?url=${encodedUrl}`);
+      setVideoSrc(`${BACKEND}/google-video?url=${encodedUrl}`);
 
-      // reload video when source changes
       setTimeout(() => {
         videoRef.current?.load();
         videoRef.current?.play();
       }, 100);
     } catch (error) {
       console.error("Error fetching video:", error);
-      // Optionally show error message to user
     } finally {
-      setIsLoading(false); // Set loading to false when fetch completes (success or error)
+      setIsLoading(false);
     }
   };
 
@@ -65,13 +63,13 @@ function App() {
           value={inputUrl}
           onChange={(e) => setInputUrl(e.target.value)}
           style={styles.input}
-          disabled={isLoading} // Disable input while loading
+          disabled={isLoading}
         />
-        <button 
-          onClick={playVideo} 
+        <button
+          onClick={playVideo}
           style={{
             ...styles.playBtn,
-            ...(isLoading ? styles.disabledBtn : {})
+            ...(isLoading ? styles.disabledBtn : {}),
           }}
           disabled={isLoading}
         >
@@ -167,8 +165,6 @@ const styles = {
   },
 };
 
-// Add this keyframes animation to your global CSS or in a style tag
-// If you're using CSS modules or styled-components, you might need to handle this differently
 const styleSheet = document.createElement("style");
 styleSheet.textContent = `
   @keyframes spin {
